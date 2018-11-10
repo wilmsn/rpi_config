@@ -21,3 +21,20 @@ systemctl daemon-reload
 echo "Installing Samba config"
 cp smb.conf /etc/samba/smb.conf
 /etc/init.d/samba restart
+echo "Config MariaDB"
+echo -n "Use this storage for database: "
+DBSTORAGE=$(df | grep sda | awk '{print $6}')
+echo "${DBSTORAGE}/database
+mkdir ${DBSTORAGE}/database
+ln -s ${DBSTORAGE}/database /database
+echo "Stopping MariaDB"
+service mariadb stop
+echo "Changing config file"
+sed -i "s#^datadir.*=.*#datadir  =  \/database#" /etc/mysql/mariadb.conf.d/50-server.cnf 
+echo -n "Its now: "
+cat /etc/mysql/mariadb.conf.d/50-server.cnf | grep datadir
+echo "Create initial (system)database"
+mysql_install_db --user=mysql
+echo "Starting MariaDB"
+service mariadb start
+
