@@ -1,0 +1,7 @@
+
+
+
+Einstellungen zur Tastaturbeleuchtung:
+sudo vi /sys/class/leds/dell\:\:kbd_backlight/stop_timeout
+==> Zeit entsprechend eintragen!
+
